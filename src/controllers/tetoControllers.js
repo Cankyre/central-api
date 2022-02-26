@@ -10,7 +10,7 @@ function setStats() {
     console.log("Stats updated at " + new Date().toISOString())
     _stats = computeStats.stats(res.data)
     setTimeout(setStats, res.data.cache.cached_until - Date.now())
-  })
+  }).catch(console.error)
 }
 setStats()
 
@@ -19,6 +19,7 @@ setStats()
  * @param {Response} res
  */
 module.exports.stats = async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   if (_stats) {
     res.json({..._stats, error: false})
   } else {
@@ -27,5 +28,6 @@ module.exports.stats = async (req, res) => {
 }
 
 module.exports.user = async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.json(computeStats.user((await infos(req.params.user))))
 }
