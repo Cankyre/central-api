@@ -8,8 +8,8 @@
     "start": "node src/main.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Cankyre",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "@supabase/supabase-js": "^1.30.3",
     "axios": "^0.26.0",
