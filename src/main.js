@@ -24,9 +24,11 @@ module.exports.supabase = createClient(
 const ticketsRoutes = require("./routes/ticketsRoutes");
 const gotosRoutes = require("./routes/gotoRoutes")
 const statusRoutes = require("./routes/statusRoutes")
+const tetoRoutes = require("./routes/tetoRoutes")
 ticketsRoutes(app);
 gotosRoutes(app);
 statusRoutes(app)
+tetoRoutes(app);
 
 app.get("/", (_, res) => {
   res.status(200).json({ received: Date.now() });
