@@ -98,5 +98,7 @@ module.exports.user = (u) => {
   for (stat in getStats_fns) {
     a[stat] = getStats_fns[stat](u)
   }
+  a.badges = u.badges.map(i => i.id)
+  a.avatar = `https://tetr.io/user-content/avatars/${u._id}.jpg?rv=${u.avatar_revision}`
   return a
 }
