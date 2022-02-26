@@ -29,5 +29,9 @@ module.exports.stats = async (req, res) => {
 
 module.exports.user = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.json(computeStats.user((await infos(req.params.user))))
+  try {
+    res.json(computeStats.user((await infos(req.params.user))))
+  } catch {
+    res.json({})
+  }
 }
