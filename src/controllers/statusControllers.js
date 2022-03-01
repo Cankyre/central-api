@@ -43,6 +43,7 @@ module.exports.get = async (_, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   const _res = await supabase.from("status")
     .select("*")
+    .order('id', {ascending: false})
     .range(0, 288)
   res.json(_res.data)
 }
