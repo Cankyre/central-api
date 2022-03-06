@@ -31,6 +31,7 @@ statusRoutes(app)
 tetoRoutes(app);
 
 app.get("/", (_, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.status(200).json({ received: Date.now() });
 });
 
