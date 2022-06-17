@@ -1,7 +1,7 @@
 const { Request, Response } = require("express");
 const computeStats = require("../functions/computeStats")
 const axios = require("axios").default
-const { infos } = require("tetr.js").TetraChannel.users
+const { infos, records } = require("tetr.js").TetraChannel.users
 
 _stats = {}
 
@@ -30,7 +30,14 @@ module.exports.stats = async (req, res) => {
 module.exports.user = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   try {
-    res.json(computeStats.user((await infos(req.params.user))))
+    console.log(req.params.user, req.params.user.split(" ").filter(i => !/^\s+$/g.test(i)).length)
+    if (req.params.user.split(" ").filter(i => !/^\s+$/g.test(i)).length == 1) {
+      res.json(computeStats.user((await infos(req.params.user)), (await records(req.params.user))))
+    } else if (req.params.user.split(" ").filter(i => !/^\s+$/g.test(i)).length == 2) {
+      res.json(computeStats.two_users((await infos(req.params.user.split(" ")[0])), (await infos(req.params.user.split(" ")[1]))))
+    } else {
+      res.json({})
+    }
   } catch {
     res.json({})
   }

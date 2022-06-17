@@ -12,6 +12,9 @@ getStats_fns = {
     getStats_fns["app"](u),
   ge: (u) =>
     ((getStats_fns["app"](u) * getStats_fns["dsps"](u)) / u.league.pps) * 2,
+  app_dspp: (u) => getStats_fns["dspp"](u) + getStats_fns["app"](u),
+  vs_apm: (u) => getStats_fns["vs"](u) / getStats_fns["apm"](u),
+  nyaapp: (u) => getStats_fns["app"](u) - 5 * Math.tan(getStats_fns["ci"]/(-30) + 1)
 };
 
 ranks_percentiles = {
@@ -46,6 +49,9 @@ module.exports.stats = (lb) => {
     dspp: {},
     ci: {},
     ge: {},
+    app_dspp: {},
+    vs_apm: {},
+    nyaapp: {}
   };
 
   ranks_playernum = {};
@@ -93,14 +99,43 @@ module.exports.stats = (lb) => {
   }
 }
 
-module.exports.user = (u) => {
-  a = {}
+module.exports.user = (u, r) => {
+  a = {
+    type: 1,
+    badges: u.badges.map(i => i.id),
+    avatar: `https://tetr.io/user-content/avatars/${u._id}.jpg?rv=${u.avatar_revision}`,
+    rank: u.league.rank,
+    country: u.country
+  }
   for (stat in getStats_fns) {
     a[stat] = getStats_fns[stat](u)
   }
-  a.badges = u.badges.map(i => i.id)
-  a.avatar = `https://tetr.io/user-content/avatars/${u._id}.jpg?rv=${u.avatar_revision}`
-  a.rank = u.league.rank
-  a.country = u.country
+  for (record in r.records) {
+    if (r.records[record].record == null) return;
+    a[record] = r.records[record].record
+  }
+  return a
+}
+
+module.exports.two_users = (u1, u2) => {
+  var a = {
+    type: 2,
+    u1: {
+      badges: u1.badges.map(i => i.id),
+      avatar: `https://tetr.io/user-content/avatars/${u1._id}.jpg?rv=${u1.avatar_revision}`,
+      rank: u1.league.rank,
+      country: u1.country
+    },
+    u2: {
+      badges: u2.badges.map(i => i.id),
+      avatar: `https://tetr.io/user-content/avatars/${u2._id}.jpg?rv=${u2.avatar_revision}`,
+      rank: u2.league.rank,
+      country: u2.country
+    }
+  }
+  for (stat in getStats_fns) {
+    a.u1[stat] = getStats_fns[stat](u1)
+    a.u2[stat] = getStats_fns[stat](u2)
+  }
   return a
 }
