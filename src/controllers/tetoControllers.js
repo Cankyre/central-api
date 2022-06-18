@@ -15,7 +15,7 @@ function setStats() {
     })
     .catch(console.error);
 }
-// setStats()
+setStats()
 
 /**
  * @param {Request} req

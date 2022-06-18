@@ -1,3 +1,5 @@
+old = {}
+
 getStats_fns = {
   tr: (u) => u.league.rating,
   apm: (u) => u.league.apm,
@@ -55,6 +57,8 @@ module.exports.stats = (lb) => {
     nyaapp: {},
   };
 
+  ranked_num = lb.data.users.length
+
   ranks_playernum = {};
   lb.data.users.forEach((u) => {
     ranks_playernum[u.league.rank] = (ranks_playernum[u.league.rank] || 0) + 1;
@@ -84,6 +88,7 @@ module.exports.stats = (lb) => {
   }
 
   ranks_boundaries = {};
+  ranks_variations = {}
 
   for (i in ranks_percentiles) {
     ranks_boundaries[i] =
@@ -92,12 +97,24 @@ module.exports.stats = (lb) => {
       ].league.rating;
   }
 
-  return {
+  for (let i in ranks_boundaries) {
+    try {
+      ranks_variations[i] = ranks_boundaries[i] - old.ranks_boundaries[i]
+    } catch {
+      ranks_variations[i] = 0
+    }
+  }
+
+  old = {
     country_lbs,
     ranks_boundaries,
     ranks_percentiles,
+    ranks_num,
     ranks_playernum,
-  };
+    ranks_variations
+  }
+
+  return old
 };
 
 module.exports.user = (u, r) => {
