@@ -99,7 +99,7 @@ module.exports.stats = (lb) => {
 
   for (let i in ranks_boundaries) {
     try {
-      ranks_variations[i] = ranks_boundaries[i] - old.ranks_boundaries[i]
+      ranks_variations[i] = ranks_boundaries[i] - old.ranks_boundaries[i] || old.ranks_boundaries[i]
     } catch {
       ranks_variations[i] = 0
     }
