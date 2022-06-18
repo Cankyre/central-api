@@ -3,10 +3,10 @@ const { createClient } = require("@supabase/supabase-js");
 const express = require("express");
 
 const app = express();
-var time = require('express-timestamp')
+var time = require("express-timestamp");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(time.init)
+app.use(time.init);
 
 const options = {
   schema: "public",
@@ -22,12 +22,12 @@ module.exports.supabase = createClient(
 );
 
 const ticketsRoutes = require("./routes/ticketsRoutes");
-const gotosRoutes = require("./routes/gotoRoutes")
-const statusRoutes = require("./routes/statusRoutes")
-const tetoRoutes = require("./routes/tetoRoutes")
+const gotosRoutes = require("./routes/gotoRoutes");
+const statusRoutes = require("./routes/statusRoutes");
+const tetoRoutes = require("./routes/tetoRoutes");
 ticketsRoutes(app);
 gotosRoutes(app);
-statusRoutes(app)
+statusRoutes(app);
 tetoRoutes(app);
 
 app.get("/", (_, res) => {

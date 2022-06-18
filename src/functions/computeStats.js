@@ -14,7 +14,8 @@ getStats_fns = {
     ((getStats_fns["app"](u) * getStats_fns["dsps"](u)) / u.league.pps) * 2,
   app_dspp: (u) => getStats_fns["dspp"](u) + getStats_fns["app"](u),
   vs_apm: (u) => getStats_fns["vs"](u) / getStats_fns["apm"](u),
-  nyaapp: (u) => getStats_fns["app"](u) - 5 * Math.tan(getStats_fns["ci"]/(-30) + 1)
+  nyaapp: (u) =>
+    getStats_fns["app"](u) - 5 * Math.tan(getStats_fns["ci"] / -30 + 1),
 };
 
 ranks_percentiles = {
@@ -51,13 +52,13 @@ module.exports.stats = (lb) => {
     ge: {},
     app_dspp: {},
     vs_apm: {},
-    nyaapp: {}
+    nyaapp: {},
   };
 
   ranks_playernum = {};
   lb.data.users.forEach((u) => {
-    ranks_playernum[u.league.rank] = (ranks_playernum[u.league.rank] || 0) + 1
-  })
+    ranks_playernum[u.league.rank] = (ranks_playernum[u.league.rank] || 0) + 1;
+  });
 
   for (stat in country_lbs) {
     lb.data.users.forEach((u) => {
@@ -95,47 +96,66 @@ module.exports.stats = (lb) => {
     country_lbs,
     ranks_boundaries,
     ranks_percentiles,
-    ranks_playernum
-  }
-}
+    ranks_playernum,
+  };
+};
 
 module.exports.user = (u, r) => {
   a = {
     type: 1,
-    badges: u.badges.map(i => i.id),
+    badges: u.badges.map((i) => i.id),
     avatar: `https://tetr.io/user-content/avatars/${u._id}.jpg?rv=${u.avatar_revision}`,
     rank: u.league.rank,
-    country: u.country
-  }
+    country: u.country,
+  };
   for (stat in getStats_fns) {
-    a[stat] = getStats_fns[stat](u)
+    a[stat] = getStats_fns[stat](u);
   }
   for (record in r.records) {
     if (r.records[record].record == null) return;
-    a[record] = r.records[record].record
+    a[record] = r.records[record].record;
   }
-  return a
-}
+  return a;
+};
 
 module.exports.two_users = (u1, u2) => {
   var a = {
     type: 2,
     u1: {
-      badges: u1.badges.map(i => i.id),
+      badges: u1.badges.map((i) => i.id),
       avatar: `https://tetr.io/user-content/avatars/${u1._id}.jpg?rv=${u1.avatar_revision}`,
       rank: u1.league.rank,
-      country: u1.country
+      country: u1.country,
     },
     u2: {
-      badges: u2.badges.map(i => i.id),
+      badges: u2.badges.map((i) => i.id),
       avatar: `https://tetr.io/user-content/avatars/${u2._id}.jpg?rv=${u2.avatar_revision}`,
       rank: u2.league.rank,
-      country: u2.country
-    }
-  }
+      country: u2.country,
+    },
+  };
   for (stat in getStats_fns) {
-    a.u1[stat] = getStats_fns[stat](u1)
-    a.u2[stat] = getStats_fns[stat](u2)
+    a.u1[stat] = getStats_fns[stat](u1);
+    a.u2[stat] = getStats_fns[stat](u2);
   }
-  return a
-}
+  a["wc"] = Number(
+    (
+      (1 /
+        (1 +
+          Math.pow(
+            10,
+            (u2.league.glicko - u1.league.glicko) /
+              (400 *
+                Math.sqrt(
+                  1 +
+                    (3 *
+                      Math.pow(Math.LN10 / 400, 2) *
+                      (Math.pow(u1.league.rd, 2) + Math.pow(u2.league.rd, 2))) /
+                      Math.pow(Math.PI, 2)
+                ))
+          ))) *
+      (99 + 1)
+    ).toFixed(3)
+  );
+  return a;
+};
