@@ -109,7 +109,7 @@ module.exports.stats = (lb) => {
     country_lbs,
     ranks_boundaries,
     ranks_percentiles,
-    ranks_num,
+    ranked_num,
     ranks_playernum,
     ranks_variations
   }
