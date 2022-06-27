@@ -57,6 +57,22 @@ module.exports.stats = (lb) => {
     nyaapp: {},
   };
 
+  ranks_avg = {
+    tr: {},
+    apm: {},
+    pps: {},
+    vs: {},
+    wr: {},
+    app: {},
+    dsps: {},
+    dspp: {},
+    ci: {},
+    ge: {},
+    app_dspp: {},
+    vs_apm: {},
+    nyaapp: {},
+  }
+
   ranked_num = lb.data.users.length
 
   ranks_playernum = {};
@@ -66,6 +82,8 @@ module.exports.stats = (lb) => {
 
   for (stat in country_lbs) {
     lb.data.users.forEach((u) => {
+      if (!ranks_avg[stat][u.league.rank]) ranks_avg[stat][u.league.rank] = []
+      ranks_avg[stat][u.league.rank] = [(ranks_avg[stat][u.league.rank][0] || 0) + getStats_fns[stat](u), (ranks_avg[stat][u.league.rank][1] || 0) + 1] 
       if (!u.country) return;
       if (!country_lbs[stat][u.country]) country_lbs[stat][u.country] = [];
       country_lbs[stat][u.country] = [
@@ -73,6 +91,9 @@ module.exports.stats = (lb) => {
         (country_lbs[stat][u.country][1] || 0) + 1,
       ];
     });
+    for (i in ranks_avg[stat]) {
+      ranks_avg[stat][i] = ranks_avg[stat][i][0] / ranks_avg[stat][i][1]
+    }
     for (i in country_lbs[stat]) {
       if (country_lbs[stat][i][1] < 30) {
         delete country_lbs[stat][i];
@@ -107,6 +128,7 @@ module.exports.stats = (lb) => {
 
   old = {
     country_lbs,
+    ranks_avg,
     ranks_boundaries,
     ranks_percentiles,
     ranked_num,
