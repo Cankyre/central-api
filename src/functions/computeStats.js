@@ -151,7 +151,6 @@ module.exports.user = (u, r) => {
     a[stat] = getStats_fns[stat](u);
   }
   for (record in r.records) {
-    if (r.records[record].record == null) return;
     a[record] = r.records[record].record;
   }
   return a;
